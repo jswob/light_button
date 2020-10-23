@@ -2,12 +2,15 @@ defmodule LightButtonWeb.FlightsLive do
   use LightButtonWeb, :live_view
 
   alias LightButton.Flights
+  alias LightButton.Airports
 
   def mount(_params, _session, socket) do
     socket =
       assign(socket,
         number: "",
+        airport: "",
         flights: [],
+        matches: [],
         loading: false
       )
 
@@ -25,10 +28,32 @@ defmodule LightButtonWeb.FlightsLive do
             autofocus autocomplete="off"
             <%= if @loading, do: "readonly" %> />
 
+
+
+
+
       <button type="submit">
         <img src="images/search.svg">
       </button>
     </form>
+
+    <form phx-submit="airport-search" phx-change="suggest-airport">
+        <input type="text" name="airport" value="<%= @airport %>"
+                placeholder="Airport name"
+                autocomplete="off" list="matches"
+                phx-debounce="1000"
+                <%= if @loading, do: "readonly" %> />
+
+                <datalist id="matches">
+        <%= for match  <- @matches do %>
+          <option value="<%= match %>">=<%= match %></option>
+        <% end %>
+      </datalist>
+
+        <button type="submit">
+          <img src="images/search.svg">
+        </button>
+      </form>
 
       <%= if @loading do %>
         <div class="loader">Loading...</div>
@@ -62,6 +87,52 @@ defmodule LightButtonWeb.FlightsLive do
       </div>
     </div>
     """
+  end
+
+  def handle_event("suggest-airport", %{"airport" => prefix}, socket) do
+    matches = Airports.suggest(prefix)
+
+    socket = assign(socket, matches: matches)
+    {:noreply, socket}
+  end
+
+  def handle_event("airport-search", %{"airport" => airport}, socket) do
+    send(self(), {:airport_search_procedure, airport})
+
+    socket =
+      assign(socket,
+        airport: airport,
+        flights: [],
+        loading: true
+      )
+
+    {:noreply, socket}
+  end
+
+  def handle_info({:airport_search_procedure, airport}, socket) do
+    case Flights.search_by_airport(airport) do
+      [] ->
+        socket =
+          socket
+          |> put_flash(:info, "None flights were found for selected airport")
+          |> assign(
+            flights: [],
+            loading: false
+          )
+
+        {:noreply, socket}
+
+      flights ->
+        socket =
+          socket
+          |> clear_flash()
+          |> assign(
+            flights: flights,
+            loading: false
+          )
+
+        {:noreply, socket}
+    end
   end
 
   def handle_event("flight-search", %{"number" => number}, socket) do
