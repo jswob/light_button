@@ -5,7 +5,20 @@ defmodule LightButtonWeb.LicenseLive do
   import Number.Currency
 
   def mount(_params, _session, socket) do
-    socket = assign(socket, seats: 2, amount: Licencses.calculate(2))
+    if connected?(socket) do
+      :timer.send_interval(1000, self(), :tick)
+    end
+
+    expiration_time = Timex.shift(Timex.now(), hours: 1)
+
+    socket =
+      assign(socket,
+        seats: 2,
+        amount: Licencses.calculate(2),
+        expiration_time: expiration_time,
+        time_remaining: time_remaining(expiration_time)
+      )
+
     {:ok, socket}
   end
 
@@ -31,6 +44,14 @@ defmodule LightButtonWeb.LicenseLive do
             <div class="amount">
               <%= number_to_currency(@amount) %>
             </div>
+
+            <p class="m-4 font-semibold text-indigo-800">
+              <%= if @time_remaining > 0 do %>
+                <%= format_time(@time_remaining) %> left to save 20%
+              <% else %>
+                Expired!
+              <% end %>
+            </p>
           </div>
         </div>
       </div>
@@ -47,5 +68,20 @@ defmodule LightButtonWeb.LicenseLive do
       )
 
     {:noreply, socket}
+  end
+
+  def handle_info(:tick, socket) do
+    socket = assign(socket, time_remaining: time_remaining(socket.assigns.expiration_time))
+    {:noreply, socket}
+  end
+
+  defp time_remaining(expiration_time) do
+    DateTime.diff(expiration_time, Timex.now())
+  end
+
+  defp format_time(time) do
+    time
+    |> Timex.Duration.from_seconds()
+    |> Timex.format_duration(:humanized)
   end
 end
