@@ -43,7 +43,7 @@ defmodule LightButtonWeb.LightLive do
 
         <form phx-change="update">
           <input type="range" min="0" max="100"
-                name="brightness" value="<%= @brightness %>" />
+                name="brightness" value="<%= @brightness %>" phx-debounce="250" />
         </form>
 
         <form phx-change="switch-color">

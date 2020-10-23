@@ -38,7 +38,7 @@ defmodule LightButtonWeb.LicenseLive do
 
             <form phx-change="update">
               <input type="range" min="1" max="10"
-                    name="seats" value="<%= @seats %>" />
+                    name="seats" value="<%= @seats %>" phx-debounce="250" />
             </form>
 
             <div class="amount">
@@ -58,6 +58,7 @@ defmodule LightButtonWeb.LicenseLive do
     """
   end
 
+  @spec handle_event(<<_::48>>, map, Phoenix.LiveView.Socket.t()) :: {:noreply, any}
   def handle_event("update", %{"seats" => seats}, socket) do
     seats = String.to_integer(seats)
 
