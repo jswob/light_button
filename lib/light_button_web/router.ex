@@ -21,6 +21,7 @@ defmodule LightButtonWeb.Router do
     live "/light", LightLive
     live "/license", LicenseLive
     live "/sales-dashboard", SalesDashboardLive
+    live "/search", SearchLive
   end
 
   # Other scopes may use custom stacks.
