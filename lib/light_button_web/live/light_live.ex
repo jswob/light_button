@@ -35,6 +35,11 @@ defmodule LightButtonWeb.LightLive do
         <button phx-click="random">
           <img src="images/random.svg">
         </button>
+
+        <form phx-change="update">
+          <input type="range" min="0" max="100"
+                name="brightness" value="<%= @brightness %>" />
+          </form>
       </div>
     """
   end
@@ -61,6 +66,11 @@ defmodule LightButtonWeb.LightLive do
 
   def handle_event("down", _, socket) do
     socket = update(socket, :brightness, &max(&1 - 10, 0))
+    {:noreply, socket}
+  end
+
+  def handle_event("update", %{"brightness" => brightness}, socket) do
+    socket = assign(socket, :brightness, brightness)
     {:noreply, socket}
   end
 end
