@@ -70,6 +70,7 @@ defmodule LightButtonWeb.LightLive do
   end
 
   def handle_event("update", %{"brightness" => brightness}, socket) do
+    {brightness, _} = Integer.parse(brightness)
     socket = assign(socket, :brightness, brightness)
     {:noreply, socket}
   end
