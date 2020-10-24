@@ -5,7 +5,7 @@ defmodule LightButtonWeb.LightLive do
     socket =
       assign(socket,
         brightness: 10,
-        temp: 4000
+        selected_temp: 4000
       )
 
     {:ok, socket}
@@ -16,7 +16,7 @@ defmodule LightButtonWeb.LightLive do
       <h1>Front Porch Light</h1>
       <div id="light">
         <div class="meter">
-          <span style="width: <%= @brightness %>%; background-color: <%= temp_color(@temp) %>">
+          <span style="width: <%= @brightness %>%; background-color: <%= temp_color(@selected_temp) %>">
             <%= @brightness %>
           </span>
         </div>
@@ -47,17 +47,9 @@ defmodule LightButtonWeb.LightLive do
         </form>
 
         <form phx-change="switch-color">
-          <input type="radio" id="3000" name="temp" value="3000"
-            <%= if 3000 == @temp, do: "checked" %> />
-          <label for="3000">3000</label>
-
-          <input type="radio" id="4000" name="temp" value="4000"
-              <%= if 4000 == @temp, do: "checked" %> />
-          <label for="4000">4000</label>
-
-          <input type="radio"id="5000" name="temp" value="5000"
-              <%= if 5000 == @temp, do: "checked" %> />
-          <label for="5000">5000</label>
+          <%= for temp <- [3000, 4000, 5000] do %>
+            <%= temp_radio_button(%{temp: temp, selected_temp: @selected_temp}) %>
+          <% end %>
         </form>
 
       </div>
@@ -97,8 +89,16 @@ defmodule LightButtonWeb.LightLive do
 
   def handle_event("switch-color", %{"temp" => temp}, socket) do
     {temp, _} = Integer.parse(temp)
-    socket = assign(socket, temp: temp)
+    socket = assign(socket, selected_temp: temp)
     {:noreply, socket}
+  end
+
+  defp temp_radio_button(assigns) do
+    ~L"""
+    <input type="radio" id="<%= @temp %>" name="temp" value="<%= @temp %>"
+           <%= if @temp == @selected_temp, do: "checked" %> />
+    <label for="<%= @temp %>"><%= @temp %></label>
+    """
   end
 
   defp temp_color(3000), do: "#F1C40D"
