@@ -14,7 +14,7 @@ defmodule LightButtonWeb.FlightsLive do
         loading: false
       )
 
-    {:ok, socket}
+    {:ok, socket, temporary_assigns: [flights: [], matches: []]}
   end
 
   def render(assigns) do

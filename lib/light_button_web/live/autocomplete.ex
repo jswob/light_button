@@ -14,7 +14,7 @@ defmodule LightButtonWeb.AutocompleteLive do
         loading: false
       )
 
-    {:ok, socket}
+    {:ok, socket, temporary_assigns: [stores: [], matches: []]}
   end
 
   def render(assigns) do
@@ -131,12 +131,12 @@ defmodule LightButtonWeb.AutocompleteLive do
     end
   end
 
-  def handle_event("city-search", %{"city" => city}, socket) do
-    send(self(), {:run_city_search, city})
+  def handle_event("zip-search", %{"zip" => zip}, socket) do
+    send(self(), {:run_zip_search, zip})
 
     socket =
       assign(socket,
-        city: city,
+        zip: zip,
         stores: [],
         loading: true
       )
