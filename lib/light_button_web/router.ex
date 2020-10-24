@@ -24,6 +24,7 @@ defmodule LightButtonWeb.Router do
     live "/search", SearchLive
     live "/flights", FlightsLive
     live "/autocomplete", AutocompleteLive
+    live "/filter", FilterLive
   end
 
   # Other scopes may use custom stacks.
