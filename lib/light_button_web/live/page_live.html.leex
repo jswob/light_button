@@ -3,10 +3,17 @@
   <p>Peace of mind from prototype to production</p>
 
   <form phx-change="suggest" phx-submit="search">
-    <input type="text" name="q" value="<%= @query %>" placeholder="Live dependency search" list="results" autocomplete="off"/>
+    <input
+      type="text"
+      name="q"
+      value="<%= @query %>"
+      placeholder="Live dependency search"
+      list="results"
+      autocomplete="off"
+    />
     <datalist id="results">
       <%= for {app, _vsn} <- @results do %>
-        <option value="<%= app %>"><%= app %></option>
+      <option value="<%= app %>"><%= app %></option>
       <% end %>
     </datalist>
     <button type="submit" phx-disable-with="Searching...">Go to Hexdocs</button>
@@ -18,13 +25,36 @@
     <h2>Resources</h2>
     <ul>
       <li>
-        <a href="https://hexdocs.pm/phoenix/overview.html">Guides &amp; Docs</a>
+        <%= live_redirect "Light", to: Routes.live_path( @socket,
+        LightButtonWeb.LightLive ) %>
       </li>
       <li>
-        <a href="https://github.com/phoenixframework/phoenix">Source</a>
+        <%= live_redirect "License", to: Routes.live_path( @socket,
+        LightButtonWeb.LicenseLive ) %>
       </li>
       <li>
-        <a href="https://github.com/phoenixframework/phoenix/blob/v1.5/CHANGELOG.md">v1.5 Changelog</a>
+        <%= live_redirect "Filter", to: Routes.live_path( @socket,
+        LightButtonWeb.FilterLive ) %>
+      </li>
+      <li>
+        <%= live_redirect "Autocomplete", to: Routes.live_path( @socket,
+        LightButtonWeb.AutocompleteLive ) %>
+      </li>
+      <li>
+        <%= live_redirect "Autocomplete", to: Routes.live_path( @socket,
+        LightButtonWeb.AutocompleteLive ) %>
+      </li>
+      <li>
+        <%= live_redirect "Sales Dashboard", to: Routes.live_path( @socket,
+        LightButtonWeb.SalesDashboardLive ) %>
+      </li>
+      <li>
+        <%= live_redirect "Search", to: Routes.live_path( @socket,
+        LightButtonWeb.SearchLive ) %>
+      </li>
+      <li>
+        <%= live_redirect "Servers", to: Routes.live_path( @socket,
+        LightButtonWeb.ServersLive ) %>
       </li>
     </ul>
   </article>
@@ -35,7 +65,9 @@
         <a href="https://elixirforum.com/c/phoenix-forum">Forum</a>
       </li>
       <li>
-        <a href="https://webchat.freenode.net/?channels=elixir-lang">#elixir-lang on Freenode IRC</a>
+        <a href="https://webchat.freenode.net/?channels=elixir-lang"
+          >#elixir-lang on Freenode IRC</a
+        >
       </li>
       <li>
         <a href="https://twitter.com/elixirphoenix">Twitter @elixirphoenix</a>
