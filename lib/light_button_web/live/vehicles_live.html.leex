@@ -1,6 +1,13 @@
 <h1>🚙 Vehicles 🚘</h1>
 <div id="vehicles">
     <div class="wrapper">
+        <form phx-change="switch_per_page">
+            Show
+            <select name="per-page">
+                <%= options_for_select([5, 10, 20, 50, 100], @options.per_page) %>
+            </select>
+        </form>
+
         <table>
             <thead>
                 <tr>
@@ -39,6 +46,32 @@
         </table>
         <div class="footer">
             <div class="pagination">
+
+                <%= if @options.page > 1 do %>
+
+                <%= pagination_view @socket ,
+                    "Previous",
+                    @options.page - 1,
+                    @options.per_page,
+                    "previous" %>
+                <% end %>
+
+                <%= for i <- (@options.page - 2)..(@options.page + 2), i > 0 do %>
+
+                <%= pagination_view @socket ,
+                    i,
+                    i,
+                    @options.per_page,
+                    (if (i == @options.page), do: "active") %>
+
+                <% end %>
+
+                <%= pagination_view @socket ,
+                    "Next",
+                    @options.page + 1,
+                    @options.per_page,
+                    "next" %>
+
             </div>
         </div>
     </div>
