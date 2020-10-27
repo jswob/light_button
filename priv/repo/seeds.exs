@@ -3,8 +3,18 @@ alias LightButton.Stores.Store
 alias LightButton.Flights.Flight
 alias LightButton.Servers.Server
 alias LightButton.Donations.Donation
+alias LightButton.Vehicles.Vehicle
 
 alias LightButton.Repo
+
+for _i <- 1..1000 do
+  %Vehicle{
+    make: Faker.Vehicle.make(),
+    model: Faker.Vehicle.model(),
+    color: Faker.Color.name()
+  }
+  |> Repo.insert!()
+end
 
 %Server{
   name: "dancing-lizard",

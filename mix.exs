@@ -48,7 +48,8 @@ defmodule LightButton.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:number, "~> 1.0.1"},
-      {:timex, "~> 3.0"}
+      {:timex, "~> 3.0"},
+      {:faker, "~> 0.16", only: :dev}
     ]
   end
 
