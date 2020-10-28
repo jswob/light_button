@@ -12,16 +12,16 @@
             <thead>
                 <tr>
                     <th>
-                        ID
+                        <%= sorting_view @socket, "ID", :id, @options %>
                     </th>
                     <th>
-                        Make
+                        <%= sorting_view @socket, "Make", :make, @options %>
                     </th>
                     <th>
-                        Model
+                        <%= sorting_view @socket, "Model", :model, @options %>
                     </th>
                     <th>
-                        Color
+                        <%= sorting_view @socket, "Color", :color, @options %>
                     </th>
                 </tr>
             </thead>
@@ -52,7 +52,7 @@
                 <%= pagination_view @socket ,
                     "Previous",
                     @options.page - 1,
-                    @options.per_page,
+                    @options,
                     "previous" %>
                 <% end %>
 
@@ -61,7 +61,7 @@
                 <%= pagination_view @socket ,
                     i,
                     i,
-                    @options.per_page,
+                    @options,
                     (if (i == @options.page), do: "active") %>
 
                 <% end %>
@@ -69,7 +69,7 @@
                 <%= pagination_view @socket ,
                     "Next",
                     @options.page + 1,
-                    @options.per_page,
+                    @options,
                     "next" %>
 
             </div>
