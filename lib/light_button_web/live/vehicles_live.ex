@@ -7,12 +7,16 @@ defmodule LightButtonWeb.VehiclesLive do
     {:ok, socket, temporary_assigns: [vehicles: []]}
   end
 
+  @permitted_sort_bys ~w(id make model color)
+  @permitted_sort_orders ~w(asc desc)
   def handle_params(params, _url, socket) do
-    page = String.to_integer(params["page"] || "1")
-    per_page = String.to_integer(params["per_page"] || "5")
+    page = transform_to_integer(params["page"], 1)
+    per_page = transform_to_integer(params["per_page"], 5)
 
-    sort_by = String.to_atom(params["sort_by"] || "id")
-    sort_order = String.to_atom(params["sort_order"] || "asc")
+    sort_by = String.to_atom(param_or_first_permitted(params, "sort_by", @permitted_sort_bys))
+
+    sort_order =
+      String.to_atom(param_or_first_permitted(params, "sort_order", @permitted_sort_orders))
 
     pagination_options = %{page: page, per_page: per_page}
     sorting_options = %{sort_by: sort_by, sort_order: sort_order}
@@ -100,6 +104,23 @@ defmodule LightButtonWeb.VehiclesLive do
           sort_order: sort_order
         )
     )
+  end
+
+  defp transform_to_integer(nil, default), do: default
+
+  defp transform_to_integer(param, default) do
+    case Integer.parse(param) do
+      {number, _} ->
+        number
+
+      :error ->
+        default
+    end
+  end
+
+  defp param_or_first_permitted(params, key, permitted) do
+    value = params[key]
+    if value in permitted, do: value, else: hd(permitted)
   end
 
   defp toggle_sort_order(:asc), do: :desc
